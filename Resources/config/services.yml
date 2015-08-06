@@ -1,0 +1,18 @@
+
+parameters:
+    core.base.xhr_core_exception_listener.class: Core\AjaxAuthenticationBundle\Listener\XHRCoreExceptionListener
+    core.base.xhr_authentication_success_handler.class: Core\AjaxAuthenticationBundle\Handler\XHRAuthenticationSuccessHandler
+    core.base.xhr_authentication_failure_handler.class: Core\AjaxAuthenticationBundle\Handler\XHRAuthenticationFailureHandler    
+    
+services:
+    core.base.xhr_core_exception_listener:
+        class: %core.base.xhr_core_exception_listener.class%
+        arguments: ["@service_container"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
+    core.base.xhr_authentication_success_handler:
+        class: %core.base.xhr_authentication_success_handler.class%
+        arguments: ['@security.http_utils', {  }]
+    core.base.xhr_authentication_failure_handler:
+        class: %core.base.xhr_authentication_failure_handler.class%
+        arguments: ['@http_kernel', '@security.http_utils', {  }, '@?logger']
